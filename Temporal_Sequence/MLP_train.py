@@ -10,7 +10,7 @@ import torch.nn.utils as utils
 from model.model import MLP
 from model.model import Deep_MLP
 from model.evalAUC import evalAUC, checkAUC, acc_cal
-from utils.feature import under_sample
+# from utils.feature import under_sample
 import sys
 sys.path.append('/home/tyk/EventAug/Temporal_Sequence')
 
@@ -35,7 +35,7 @@ X_test = scaler.transform(X_test)
 X_train = np.nan_to_num(X_train, nan=0)
 X_test = np.nan_to_num(X_test,nan=0)
 
-X,y = under_sample(X_train,y_train)
+# X,y = under_sample(X_train,y_train)
 
 class CustomDataset(Dataset):
     def __init__(self, X, y):
@@ -46,8 +46,8 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         return self.X[idx], self.y[idx]
 # 创建训练集和测试集的DataLoader
-# train_dataset = CustomDataset(X_train, y_train)
-train_dataset = CustomDataset(X, y)
+train_dataset = CustomDataset(X_train, y_train)
+# train_dataset = CustomDataset(X, y)
 test_dataset = CustomDataset(X_test, y_test)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
@@ -56,15 +56,15 @@ test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 input_dim = X_train.shape[1]
 hidden_dim = 3200
 output_dim = 2
-# model = MLP(input_dim, hidden_dim, output_dim)
-model = Deep_MLP(input_dim, hidden_dim, output_dim)
+model = MLP(input_dim, hidden_dim, output_dim)
+# model = Deep_MLP(input_dim, hidden_dim, output_dim)
 
 # 定义损失函数和优化器
 criterion = nn.CrossEntropyLoss()
 # optimizer = optim.SGD(model.parameters(), lr=0.001,momentum=0.9)
 optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-epochs = 200
-device = torch.device("cuda:6" if torch.cuda.is_available() else "cpu")
+epochs = 100
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def train_eval_model(model, train_loader, criterion, optimizer, epochs=100):
     print('Start training and testing.')
