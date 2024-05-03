@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-train_data = pd.read_csv('/home/tyk/EventAug/Temporal_Sequence/dataset/train.csv')
-test_data = pd.read_csv('/home/tyk/EventAug/Temporal_Sequence/dataset/test.csv')
+train_data = pd.read_csv('/home/tyk/EventAug/Temporal_Sequence/dataset/cleaned_train_data.csv')
+test_data = pd.read_csv('/home/tyk/EventAug/Temporal_Sequence/dataset/cleaned_test_data.csv')
 
 # 假设特征列名为'features'，目标列名为'target'
 X_train = train_data.iloc[:, 3:].values
@@ -22,7 +22,7 @@ X_train = np.nan_to_num(X_train, nan=0)
 X_test = np.nan_to_num(X_test,nan=0)
 
 # 初始化梯度提升分类器
-gb_clf = GradientBoostingClassifier(n_estimators=1000, learning_rate=0.1, max_depth=3, random_state=42)
+gb_clf = GradientBoostingClassifier(n_estimators=1000, learning_rate=0.01, max_depth=9) # random_state = seed
 # 训练模型
 gb_clf.fit(X_train, y_train)
 # 预测概率
